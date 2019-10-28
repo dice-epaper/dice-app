@@ -16,63 +16,55 @@ import React, {Component} from 'react';
 import {Header} from './components/Header';
 import styles from './components/styles';
 
-class Edit extends Component {
+var radio_props = [
+  {label: 'common', value: 0},
+  {label: 'beef', value: 1},
+  {label: 'wine', value: 2},
+];
+
+class Add extends Component {
   constructor(props) {
     super(props);
     this.state = {
       value: 0,
 
-      product_type: props.navigation.getParam('type', null),
-      obj: props.navigation.getParam('obj', null),
+      product_type: 'common',
 
-      product_id: props.navigation.getParam('obj', null)?.product_id,
+      common_brand: null,
+      common_category: null,
+      common_name: null,
+      common_price: null,
+      common_capacity: null,
+      common_unit: null,
+      common_displayType: null,
 
-      common_brand: props.navigation.getParam('obj', null)?.common_brand,
-      common_category: props.navigation.getParam('obj', null)?.common_category,
-      common_name: props.navigation.getParam('obj', null)?.common_name,
-      common_price: props.navigation
-        .getParam('obj', null)
-        ?.common_price?.toString(),
-      common_capacity: props.navigation
-        .getParam('obj', null)
-        ?.common_capacity?.toString(),
-      common_unit: props.navigation.getParam('obj', null)?.common_unit,
-      common_displayType: props.navigation.getParam('obj', null)
-        ?.common_displayType,
+      // common_brand: 'brand~',
+      // common_category: 'category~',
+      // common_name: 'name~',
+      // common_price: '1000',
+      // common_capacity: '2000',
+      // common_unit: 'kg',
+      // common_displayType: 'A',
 
-      beef_part: props.navigation.getParam('obj', null)?.beef_part,
-      beef_pricePerUnitWeight: props.navigation
-        .getParam('obj', null)
-        ?.beef_pricePerUnitWeight?.toString(),
-      beef_origin: props.navigation.getParam('obj', null)?.beef_origin,
-      beef_usage: props.navigation.getParam('obj', null)?.beef_usage,
-      beef_identificationNum: props.navigation
-        .getParam('obj', null)
-        ?.beef_identificationNum?.toString(),
-      beef_rate: props.navigation.getParam('obj', null)?.beef_rate,
+      beef_part: null,
+      beef_pricePerUnitWeight: null,
+      beef_origin: null,
+      beef_usage: null,
+      beef_identificationNum: null,
+      beef_rate: null,
 
-      wine_brand: props.navigation.getParam('obj', null)?.wine_brand,
-      wine_name: props.navigation.getParam('obj', null)?.wine_name,
-      wine_price: props.navigation
-        .getParam('obj', null)
-        ?.wine_price?.toString(),
-      wine_capacity: props.navigation
-        .getParam('obj', null)
-        ?.wine_capacity?.toString(),
-      wine_origin: props.navigation.getParam('obj', null)?.wine_origin,
-      wine_sugarContent: props.navigation
-        .getParam('obj', null)
-        ?.wine_sugarContent?.toString(),
-      wine_frequency: props.navigation
-        .getParam('obj', null)
-        ?.wine_frequency?.toString(),
+      wine_brand: null,
+      wine_name: null,
+      wine_price: null,
+      wine_capacity: null,
+      wine_origin: null,
+      wine_sugarContent: null,
+      wine_frequency: null,
     };
   }
 
-  _editProduct = async () => {
+  _addProduct = async () => {
     const {
-      product_id,
-
       product_type,
 
       common_brand,
@@ -103,14 +95,14 @@ class Edit extends Component {
       const response = await fetch(
         'https://biw4gdguia.execute-api.ap-northeast-2.amazonaws.com/default/dice-allproduct',
         {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
           body:
             product_type === 'common'
-              ? `product_id=${product_id}&product_type=${product_type}&common_brand=${common_brand}&common_name=${common_name}&common_price=${common_price}&common_capacity=${common_capacity}&common_unit=${common_unit}&common_displayType=${common_displayType}&common_category=${common_category}`
+              ? `product_type=${product_type}&common_brand=${common_brand}&common_name=${common_name}&common_price=${common_price}&common_capacity=${common_capacity}&common_unit=${common_unit}&common_displayType=${common_displayType}&common_category=${common_category}`
               : product_type === 'beef'
               ? `product_type=${product_type}&beef_part=${beef_part}&beef_pricePerUnitWeight=${beef_pricePerUnitWeight}&beef_origin=${beef_origin}&beef_usage=${beef_usage}&beef_identificationNum=${beef_identificationNum}&beef_rate=${beef_rate}`
               : `product_type=${product_type}&wine_brand=${wine_brand}&wine_name=${wine_name}&wine_price=${wine_price}&wine_capacity=${wine_capacity}&wine_origin=${wine_origin}&wine_sugarContent=${wine_sugarContent}&wine_frequency=${wine_frequency}`,
@@ -123,28 +115,68 @@ class Edit extends Component {
         Alert.alert('알림', '다시 시도해주세요!');
       }
     } catch (err) {
-      console.log('err in _setEpaperInfo');
-      console.log(err);
+      Alert.alert('알림', 'err in _setEpaperInfo!');
     }
   };
 
   render() {
-    const {product_type, obj} = this.state;
-    console.log('obj');
-    console.log(obj);
+    const {value} = this.state;
     return (
       <SafeAreaView style={{flex: 1}}>
         <Header onPress={() => this.props.navigation.goBack()} />
-        {product_type === 'common' && this._renderCommonAdd()}
-        {product_type === 'beef' && this._renderBeefAdd()}
-        {product_type === 'wine' && this._renderWineAdd()}
+
+        <RadioForm
+          formHorizontal={true}
+          animation={true}
+          style={{marginLeft: 30}}>
+          {/* To create radio buttons, loop through your array of options */}
+          {radio_props.map((obj, i) => (
+            <RadioButton labelHorizontal={true} key={i}>
+              {/*  You can set RadioButtonLabel before RadioButtonInput */}
+              <RadioButtonInput
+                obj={obj}
+                index={i}
+                isSelected={value === obj.value}
+                onPress={() =>
+                  this.setState({value: obj.value, type: obj.label})
+                }
+                borderWidth={1}
+                buttonInnerColor={'#0EADFF'}
+                buttonOuterColor={
+                  this.state.value3Index === i ? '#0EADFF' : '#0EADFF'
+                }
+                buttonSize={15}
+                buttonOuterSize={20}
+                buttonStyle={{}}
+                buttonWrapStyle={{marginLeft: 10}}
+              />
+              <RadioButtonLabel
+                obj={obj}
+                index={i}
+                isSelected={value === obj.value}
+                onPress={() =>
+                  this.setState({value: obj.value, type: obj.label})
+                }
+                buttonSize={25}
+                buttonOuterSize={30}
+                labelHorizontal={true}
+                labelStyle={{fontSize: 20, color: '#333'}}
+                labelWrapStyle={{}}
+              />
+            </RadioButton>
+          ))}
+        </RadioForm>
+
+        {value === 0 && this._renderCommonAdd()}
+        {value === 1 && this._renderBeefAdd()}
+        {value === 2 && this._renderWineAdd()}
       </SafeAreaView>
     );
   }
 
   _renderCommonAdd = () => {
     const {
-      product_id,
+      type,
       common_brand,
       common_category,
       common_name,
@@ -155,10 +187,6 @@ class Edit extends Component {
     } = this.state;
     return (
       <View style={{flex: 1, padding: 15, marginLeft: 20, marginRight: 20}}>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>product_id</Text>
-          <Text style={styles.textInput}>{product_id}</Text>
-        </View>
         <View style={styles.wrapper4}>
           <Text style={styles.text3}>브랜드</Text>
           <TextInput
@@ -225,8 +253,8 @@ class Edit extends Component {
             marginTop: 10,
             alignSelf: 'center',
           }}
-          onPress={() => this._editProduct()}>
-          <Text style={{color: 'white', textAlign: 'center'}}>수정</Text>
+          onPress={() => this._addProduct()}>
+          <Text style={{color: 'white', textAlign: 'center'}}>등록</Text>
         </TouchableOpacity>
       </View>
     );
@@ -234,7 +262,7 @@ class Edit extends Component {
 
   _renderBeefAdd = () => {
     const {
-      product_id,
+      type,
       beef_part,
       beef_pricePerUnitWeight,
       beef_origin,
@@ -243,64 +271,84 @@ class Edit extends Component {
       beef_rate,
     } = this.state;
     return (
-      <View style={{flex: 1, padding: 15, marginLeft: 20, marginRight: 20}}>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>product_id</Text>
-          <Text>{product_id}</Text>
-        </View>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>beef 부위</Text>
+      <View style={{flex: 1}}>
+        <View style={{flexDirection: 'row'}}>
+          <Text>beef 부위</Text>
           <TextInput
             onChangeText={value => this.setState({beef_part: value})}
             value={beef_part}
-            style={styles.textInput}
+            style={{
+              width: 100,
+              borderBottomWidth: 1,
+              borderBottomColor: '#333',
+            }}
           />
         </View>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>단위별 가격</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text>단위별 가격</Text>
           <TextInput
             onChangeText={value =>
               this.setState({beef_pricePerUnitWeight: value})
             }
             value={beef_pricePerUnitWeight}
-            style={styles.textInput}
+            style={{
+              width: 100,
+              borderBottomWidth: 1,
+              borderBottomColor: '#333',
+            }}
           />
         </View>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>원산지</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text>원산지</Text>
           <TextInput
             onChangeText={value => this.setState({beef_origin: value})}
             value={beef_origin}
-            style={styles.textInput}
+            style={{
+              width: 100,
+              borderBottomWidth: 1,
+              borderBottomColor: '#333',
+            }}
           />
         </View>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>용도</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text>용도</Text>
           <TextInput
             onChangeText={value => this.setState({beef_usage: value})}
             value={beef_usage}
-            style={styles.textInput}
+            style={{
+              width: 100,
+              borderBottomWidth: 1,
+              borderBottomColor: '#333',
+            }}
           />
         </View>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>식별번호</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text>식별번호</Text>
           <TextInput
             onChangeText={value =>
               this.setState({beef_identificationNum: value})
             }
             value={beef_identificationNum}
-            style={styles.textInput}
+            style={{
+              width: 100,
+              borderBottomWidth: 1,
+              borderBottomColor: '#333',
+            }}
           />
         </View>
-        <View style={styles.wrapper4}>
-          <Text style={styles.text3}>등급</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text>등급</Text>
           <TextInput
             onChangeText={value => this.setState({beef_rate: value})}
             value={beef_rate}
-            style={styles.textInput}
+            style={{
+              width: 100,
+              borderBottomWidth: 1,
+              borderBottomColor: '#333',
+            }}
           />
         </View>
-        <TouchableOpacity onPress={() => this._editProduct()}>
+        <TouchableOpacity onPress={() => this._addProduct()}>
           <Text>등록</Text>
         </TouchableOpacity>
       </View>
@@ -309,7 +357,7 @@ class Edit extends Component {
 
   _renderWineAdd = () => {
     const {
-      product_id,
+      type,
       wine_brand,
       wine_name,
       wine_price,
@@ -320,10 +368,6 @@ class Edit extends Component {
     } = this.state;
     return (
       <View style={{flex: 1}}>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={{marginRight: 5}}>product_id</Text>
-          <Text>{product_id}</Text>
-        </View>
         <View style={{flexDirection: 'row'}}>
           <Text>wine 브랜드</Text>
           <TextInput
@@ -408,7 +452,7 @@ class Edit extends Component {
             }}
           />
         </View>
-        <TouchableOpacity onPress={() => this._editProduct()}>
+        <TouchableOpacity onPress={() => this._addProduct()}>
           <Text>등록</Text>
         </TouchableOpacity>
       </View>
@@ -416,4 +460,4 @@ class Edit extends Component {
   };
 }
 
-export default Edit;
+export default Add;
