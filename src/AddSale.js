@@ -123,7 +123,7 @@ class AddSale extends Component {
 
         {/* // isSale: 1, // hi branch
             // product_id: , // hi branch
-            // saleType: ,
+            // saleType: , // hi
             // percent: ,
             // eventType: ,
             // startdate: ,
