@@ -32,6 +32,13 @@ class AddSale extends Component {
       range: null,
       current: 1,
     };
+
+    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+    const timezoneDate = new Date(Date.now() - timezoneOffset); // toISOString: ISO 포맷은 타임존으로 UTC 타임존의 zero offset을 사용 -> 9시간 느린 날짜가 나온다. -> timezoneData만큼을 더해준 채로 toISOString을 해야한다.
+    const dateArr = timezoneDate.toISOString().slice(0, 19).replace(/-/g, '/').replace("T", " ").split(' ')[0];
+    const dateArr2 = dateArr.split('/');
+    const dateArr3 = dateArr2[0] + '-' + dateArr2[1] + '-' + dateArr2[2];
+    this.currentDate = dateArr3;
   }
 
   _addSale = async () => {
@@ -141,9 +148,10 @@ class AddSale extends Component {
           </View>
           {/* <View style={styles.wrapper4}> */}
           <Calendar
-            current={'2019-10-28'}
-            minDate={'2019-09-01'}
-            maxDate={'2020-05-30'}
+
+            // current={'2019-10-28'}
+            minDate={this.currentDate}
+            // maxDate={'2020-05-30'}
             onDayPress={day => {
               if (current === 1) {
                 this.setState({sale_startdate: day.dateString, current: 2});
