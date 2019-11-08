@@ -122,7 +122,7 @@ class AddSale extends Component {
         <Header onPress={() => this.props.navigation.goBack()} />
 
         {/* // isSale: 1, // hi branch
-            // product_id: ,
+            // product_id: , // master branch
             // saleType: ,
             // percent: ,
             // eventType: ,
