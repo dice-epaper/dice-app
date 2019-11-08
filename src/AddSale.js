@@ -15,6 +15,7 @@ import RadioForm, {
 import React, {Component} from 'react';
 
 import {Header} from './components/Header';
+import InlineTimePicker from 'react-native-inline-timepicker';
 import moment from 'moment';
 import styles from './components/styles';
 
@@ -31,6 +32,16 @@ class AddSale extends Component {
       sale_enddate: null,
       range: null,
       current: 1,
+
+      hours1: 12,
+      minutes1: 0,
+      seconds1: 0,
+      meridian1: 'AM',
+
+      hours2: 12,
+      minutes2: 0,
+      seconds2: 0,
+      meridian2: 'AM',
     };
 
     const timezoneOffset = new Date().getTimezoneOffset() * 60000;
@@ -96,6 +107,14 @@ class AddSale extends Component {
       sale_eventtype,
       sale_startdate,
       sale_enddate,
+      hours1,
+      minutes1,
+      seconds1,
+      meridian1,
+      hours2,
+      minutes2,
+      seconds2,
+      meridian2,
     } = this.state;
 
     return (
@@ -141,14 +160,41 @@ class AddSale extends Component {
           <View style={styles.wrapper4}>
             <Text style={styles.text3}>시작일</Text>
             <Text style={styles.textInput}>{sale_startdate}</Text>
+            <Text style={styles.textInput}>{`${hours1}:${minutes1}:${seconds1}`}</Text>
           </View>
+          <InlineTimePicker
+            mode24hrs={true}
+            onChangeTime={(h, m, s, mn) => {
+              let newM;
+              if (m >= 0 && m <= 9) {
+                newM = `0${m}`;
+              }
+              this.setState({
+                hours1: h,
+                minutes1: newM,
+                seconds1: s,
+              });
+            }}
+            skinColor={'blue'}
+          />
           <View style={styles.wrapper4}>
             <Text style={styles.text3}>마감일</Text>
             <Text style={styles.textInput}>{sale_enddate}</Text>
+            <Text style={styles.textInput}>{`${hours2}:${minutes2}:${seconds2}`}</Text>
           </View>
+          <InlineTimePicker
+            mode24hrs={true}
+            onChangeTime={(h, m, s, mn) => {
+              let newM;
+              if (m >= 0 && m <= 9) {
+                newM = `0${m}`;
+              }
+              this.setState({hours2: h, minutes2: newM, seconds2: s});
+            }}
+            skinColor={'blue'}
+          />
           {/* <View style={styles.wrapper4}> */}
           <Calendar
-
             // current={'2019-10-28'}
             minDate={this.currentDate}
             // maxDate={'2020-05-30'}
