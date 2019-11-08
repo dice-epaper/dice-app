@@ -121,7 +121,7 @@ class AddSale extends Component {
       <SafeAreaView style={{flex: 1}}>
         <Header onPress={() => this.props.navigation.goBack()} />
 
-        {/* // isSale: 1,
+        {/* // isSale: 1, // hi branch
             // product_id: ,
             // saleType: ,
             // percent: ,
